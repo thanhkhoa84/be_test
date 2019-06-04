@@ -1,3 +1,5 @@
+import '@babel/polyfill';
+import '@babel/register';
 import express from 'express';
 import path from 'path';
 

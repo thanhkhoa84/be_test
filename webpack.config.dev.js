@@ -108,7 +108,7 @@ module.exports = {
                 }, {
                     loader: 'sass-loader',
                     options: {
-                        includePaths: [path.resolve(__dirname, 'src', '/assets/scss')],
+                        includePaths: [path.resolve(__dirname, 'src', '/assets/scss'), 'node_modules'],
                         sourceMap: true
                     }
                 }
