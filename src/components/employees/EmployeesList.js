@@ -1,25 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+
+import EmployeeCard from './EmployeeCard';
 
 class EmployeesList extends React.Component {
     constructor(props) {
         super(props);
     }
     render() {
-        const { employees } = this.props;
+        const { employees, offset, limit } = this.props;
+        const eToShow = employees.slice(offset, offset + limit);
+
         return (
-            <tbody>
-                {employees.map((e, i) => {
-                    return (
-                        <tr key={i}>
-                            <td>{e.id}</td>
-                            <td><Link to={`/employee/${e.id}`}>{e.name}</Link></td>
-                            <td>{e.title}</td>
-                            <td>{e.email}</td>
-                        </tr>
-                    )
-                })}
-            </tbody>
+            <table className="u-full-width">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Title</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {eToShow.map((e, i) => {
+                        return (
+                            <EmployeeCard key={i} employee={e} />
+                        )
+                    })}
+                </tbody>
+            </table>
         );
     }
 }

@@ -21,11 +21,16 @@ export const updateEmployeeSuccess = (employee) => ({
     employee
 });
 
+export const deleteEmployeeSuccess = () => ({
+    type: types.DELETE_EMPLOYEE_SUCCESS
+});
+
 
 export const fetchAllEmployees = () => (dispatch) => {
     return api.getAllEmployees()
         .then(employees => {
             dispatch(fetchAllEmployeeSuccess(employees));
+            return employees;
         })
         .catch(err => {
             dispatch({ type: types.FETCH_ALL_EMPLOYEES_FAILURE });
@@ -33,25 +38,37 @@ export const fetchAllEmployees = () => (dispatch) => {
         });
 };
 
-export const getEmployeebyId = (id) => (dispatch) => {
+export const fetchEmployeebyId = (id) => (dispatch) => {
     return api.getEmployeebyId(id)
-        .then(employees => {
-            dispatch(getEmployeeSuccess(employees));
+        .then(resp => {
+            if (resp.status == 200) {
+                return resp.json();
+            }
+        })
+        .then(resp => {
+            dispatch(getEmployeeSuccess(resp));
+            return resp;
         })
         .catch(err => {
             dispatch({ type: types.GET_EMPLOYEE_FAILURE });
-            console.log(err);
         });
 }
 
 export const createNewEmployee = (employee) => (dispatch) => {
     return api.createNewEmployee(employee)
-        .then(employee => {
-            dispatch(createNewEmployeeSuccess(status));
+        .then(resp => {
+            const temp = resp.clone()
+            if (resp.status == 200) {
+                dispatch(createNewEmployeeSuccess(temp.json()));
+            } else {
+                dispatch({ type: types.CREATE_EMPLOYEE_FAILURE });
+            }
+            return resp.text();
         })
+        .then(resp => { return resp })
         .catch(err => {
+            console.log(err)
             dispatch({ type: types.CREATE_EMPLOYEE_FAILURE });
-            console.log(err);
         });
 }
 
@@ -72,10 +89,9 @@ export const deleteEmployee = (id) => (dispatch) => {
             return resp.json()
         })
         .then(status => {
-            dispatch(updateEmployeeSuccess(status));
+            dispatch(deleteEmployeeSuccess(status));
         })
         .catch(err => {
-            dispatch({ type: types.UPDATE_EMPLOYEE_FAILURE });
-            console.log(err);
+            dispatch({ type: types.DELETE_EMPLOYEE_FAILURE });
         });
 };

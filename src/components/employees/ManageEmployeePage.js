@@ -5,87 +5,137 @@ import { withRouter } from "react-router";
 import EmployeeForm from './EmployeeForm';
 
 import { fetchTitles } from '../../actions/titlesActions';
-import { createNewEmployee, updateEmployee, getEmployeebyId } from '../../actions/employeeActions';
+import { createNewEmployee, updateEmployee, fetchEmployeebyId, deleteEmployee } from '../../actions/employeeActions';
 
 class ManageEmployeePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: false,
+            isLoading: true,
             titles: [],
-            employee: {}
+            errors: {},
+            employee: null
+        }
+
+        this.newEmployee = {
+            email: '',
+            id: '',
+            name: '',
+            title: '',
+            titleId: ''
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.submitForm = this.submitForm.bind(this);
+        this.deleteUser = this.deleteUser.bind(this);
     }
 
     componentDidMount() {
         this.props.fetchTitles();
-        const { employeeId } = this.props;
-        if (employeeId) {
-            this.props.getEmployeebyId(employeeId)
-                .then(employee => {
-                    this.forceUpdate();
-                });
+
+        const id = this.props.match.params.id;
+        if (id) {
+            this.props.fetchEmployeebyId(id)
+                .then(resp => { this.setState({ employee: resp, isLoading: false }) });
+        } else {
+            this.setState({ employee: this.newEmployee })
         }
+    }
+
+    componentWillUnmount() {
+        this.setState({ employee: this.newEmployee });
+    }
+
+    redirect() {
+        this.setState({ employee: this.newEmployee }, () => {
+            this.props.history.push("/");
+        });
+    }
+
+    deleteUser() {
+        this.props.deleteEmployee(this.props.match.params.id)
+    }
+
+    formIsValid() {
+        const { name, email, title } = this.state.employee;
+        const errors = {};
+
+        if (!name) errors.name = "Name is required";
+        if (!email) errors.email = "Email is required.";
+        if (!title) errors.title = "Job title is required";
+
+        this.setState({ errors: errors });
+        return Object.keys(errors).length === 0;
     }
 
 
     handleChange(e) {
-        e.preventDefault();
         const { name, value } = e.target;
+        this.setState({
+            employee: Object.assign({}, this.state.employee, {
+                [name]: value
+            })
+        });
+        e.preventDefault();
     }
 
     submitForm(e) {
         e.preventDefault();
-        const { employee, titles } = this.props;
-        const { employeeId } = this.props;
+        if (!this.formIsValid()) {
+            return;
+        }
+        const { employee } = this.state;
+        const { titles } = this.props;
+        const id = this.props.match.params.id;
 
         employee.titleId = titles.filter(t => {
             return t.name == employee.title
         })[0].id;
 
-        if (employeeId) {
-            this.props.updateEmployee(employee);
+        if (id) {
+            this.props.updateEmployee(employee)
+                .then((resp) => {
+                    if (resp == 'OK') {
+                        this.redirect();
+                    }
+                });
         } else {
-            this.props.createNewEmployee(employee);
+            this.props.createNewEmployee(employee)
+                .then((resp) => {
+                    if (resp == 'OK') {
+                        this.redirect();
+                    } else {
+                        // dispatch error message
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
     }
 
     render() {
         return (
             <div className="row">
-                <h4>{!!this.props.employeeId ? 'Edit' : 'Add New'} Employee</h4>
-                <EmployeeForm
+                {!this.state.employee && <h3>Loading...</h3>}
+                {this.state.employee && <EmployeeForm
+                    edit={!!this.props.match.params.id}
                     options={this.props.titles}
-                    employee={this.props.employee}
+                    errors={this.state.errors}
+                    employee={this.state.employee}
                     submitForm={this.submitForm}
                     handleChange={this.handleChange}
-                />
+                />}
+                {this.props.employeeId && <button onClick={this.deleteUser}>DELETE</button>}
             </div>
         )
     }
 }
 
 const mapStateToProps = (state, ownProps) => {
-    let employee = {
-        id: null,
-        name: '',
-        title: '',
-        titleId: 1,
-        email: ''
-    }
-
-    if (ownProps.match.params.id) {
-        employee = Object.assign({}, employee, state.employee)
-    }
-
     return {
         titles: state.titles,
-        employee,
-        employeeId: ownProps.match.params.id
     }
 };
 
-export default withRouter(connect(mapStateToProps, { fetchTitles, getEmployeebyId, updateEmployee, createNewEmployee })(ManageEmployeePage));
+export default withRouter(connect(mapStateToProps, { fetchTitles, fetchEmployeebyId, updateEmployee, createNewEmployee, deleteEmployee })(ManageEmployeePage));

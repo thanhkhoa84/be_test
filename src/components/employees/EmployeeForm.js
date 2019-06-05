@@ -9,9 +9,10 @@ class EmployeeForm extends React.Component {
     }
 
     render() {
-        const { options, employee } = this.props;
+        const { options, employee, errors } = this.props;
         return (
             <form onSubmit={this.props.submitForm}>
+                <h4>{!!this.props.edit ? 'Edit' : 'Add New'} Employee</h4>
                 <div className="row">
                     <div className="u-full-width">
                         <TextInput
@@ -20,8 +21,9 @@ class EmployeeForm extends React.Component {
                             label="Employee Name"
                             placeholder="Employee Name"
                             value={employee.name}
+                            required={false}
                             onChange={this.props.handleChange}
-                        // error={errors.category}
+                            error={errors.name}
                         />
                     </div>
                 </div>
@@ -33,24 +35,26 @@ class EmployeeForm extends React.Component {
                             label="Employee Email"
                             placeholder="Employee Email"
                             value={employee.email}
+                            required={false}
                             onChange={this.props.handleChange}
-                        // error={errors.category}
+                            error={errors.email}
                         />
                     </div>
                     <div className="six columns">
                         <SelectInput
-                            name="title_id"
+                            name="title"
                             label="Job Title"
                             defaultOption="Choose A Title"
                             value={employee.title}
-                            //error,
                             onChange={this.props.handleChange}
+                            required={false}
                             options={
                                 options.map(title => ({
                                     value: title.id,
                                     text: title.name
                                 }))
                             }
+                            error={errors.title}
                         />
                     </div>
                     <input className="button-primary u-pull-right" type="submit" value="SAVE"></input>

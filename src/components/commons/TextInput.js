@@ -7,6 +7,7 @@ const TextInput = ({
     onChange,
     placeholder,
     value,
+    required,
     error
 }) => {
     return (
@@ -17,10 +18,11 @@ const TextInput = ({
                 name={name}
                 className="u-full-width"
                 placeholder={placeholder}
+                required={required}
                 value={value}
                 onChange={onChange}
             />
-            {/* {error && <div className="error">{error}</div>} */}
+            {error && <span className="error">{error}</span>}
         </div>
     )
 }

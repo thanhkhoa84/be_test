@@ -23,8 +23,8 @@ export function getAllEmployees() {
 
 export function getEmployeebyId(id) {
     return fetch(`http://localhost:5002/employee/${id}`)
-        .then(function (resp) {
-            return resp.json()
+        .then(resp => {
+            return resp;
         })
         .catch(err => {
             console.log(err);
@@ -40,8 +40,8 @@ export function createNewEmployee(employee) {
         },
         body: `{"name": "${name}","title_id": ${titleId},"email": "${email}"}`
     })
-        .then((resp) => {
-            return employee
+        .then(resp => {
+            return resp;
         })
         .catch(err => {
             console.log(err);
@@ -50,7 +50,6 @@ export function createNewEmployee(employee) {
 
 export function updateEmployee(employee) {
     const { id, name, titleId, email } = employee;
-    console.log(`{"name": "${name}","title_id": ${titleId},"email": "${email}"}`)
     return fetch(`http://localhost:5002/employee/${id}`, {
         method: 'POST',
         headers: {
@@ -59,8 +58,7 @@ export function updateEmployee(employee) {
         body: `{"name": "${name}","title_id": ${titleId},"email": "${email}"}`
     })
         .then((resp) => {
-            console.log(resp)
-            return employee;
+            return resp;
         })
         .catch(err => {
             console.log(err);

@@ -5,10 +5,10 @@ export const employeeReducer = (state = {}, action) => {
         case types.GET_EMPLOYEE_SUCCESS:
             return action.employee;
 
-        case types.CREATE_EMPLOYEES_SUCCESS:
-            return [...state, action.employee];
+        case types.CREATE_EMPLOYEE_SUCCESS:
+            return action.employee;
 
-        case types.CREATE_EMPLOYEES_FAILURE:
+        case types.CREATE_EMPLOYEE_FAILURE:
             return state;
 
         default: return state;

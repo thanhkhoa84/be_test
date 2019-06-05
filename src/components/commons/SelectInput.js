@@ -6,15 +6,16 @@ const SelectInput = ({
     onChange,
     defaultOption,
     value,
+    options,
+    required,
     error,
-    options
 }) => {
     return (
         <div>
             <label htmlFor="employeeTitle">{label}</label>
             <select
                 className="u-full-width"
-
+                required={required}
                 name={name}
                 value={value}
                 onChange={onChange}
@@ -28,7 +29,7 @@ const SelectInput = ({
                     );
                 })}
             </select>
-            {/* {error && <div className="error">{error}</div>} */}
+            {error && <span className="error">{error}</span>}
         </div>
     )
 }
