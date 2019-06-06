@@ -66,6 +66,7 @@ export const createNewEmployee = (employee) => (dispatch) => {
             if (resp.status == 200) {
                 dispatch(createNewEmployeeSuccess(temp.json()));
             } else {
+                dispatch(apiCallError(err));
                 dispatch({ type: types.CREATE_EMPLOYEE_FAILURE });
             }
             return resp.text();
@@ -79,13 +80,11 @@ export const createNewEmployee = (employee) => (dispatch) => {
 }
 
 export const updateEmployee = (employee) => (dispatch) => {
-    dispatch(beginApiCall());
     return api.updateEmployee(employee)
         .then(employee => {
             dispatch(updateEmployeeSuccess(employee));
         })
         .catch(err => {
-            dispatch(apiCallError(err));
             dispatch({ type: types.UPDATE_EMPLOYEE_FAILURE });
             console.log(err);
         });
@@ -95,11 +94,15 @@ export const deleteEmployee = (id) => (dispatch) => {
     dispatch(beginApiCall());
     return api.deleteEmployee(id)
         .then(function (resp) {
-            return resp.json()
+            if (resp.status == 200) {
+                dispatch(deleteEmployeeSuccess());
+            } else {
+                dispatch(apiCallError(err));
+                dispatch({ type: types.CREATE_EMPLOYEE_FAILURE });
+            }
+            return resp.text();
         })
-        .then(status => {
-            dispatch(deleteEmployeeSuccess(status));
-        })
+        .then(resp => { return resp })
         .catch(err => {
             dispatch(apiCallError(err));
             dispatch({ type: types.DELETE_EMPLOYEE_FAILURE });

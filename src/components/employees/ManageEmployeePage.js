@@ -1,7 +1,8 @@
 import React from 'react';
-
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
+import { toast } from "react-toastify";
+
 import Loader from '../commons/Loader';
 import EmployeeForm from './EmployeeForm';
 
@@ -15,7 +16,8 @@ class ManageEmployeePage extends React.Component {
             isLoading: true,
             titles: [],
             errors: {},
-            employee: null
+            employee: null,
+            saving: false
         }
 
         this.newEmployee = {
@@ -29,6 +31,8 @@ class ManageEmployeePage extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.submitForm = this.submitForm.bind(this);
         this.deleteUser = this.deleteUser.bind(this);
+
+        console.log(toast)
     }
 
     componentDidMount() {
@@ -55,6 +59,11 @@ class ManageEmployeePage extends React.Component {
 
     deleteUser() {
         this.props.deleteEmployee(this.props.match.params.id)
+            .then((resp) => {
+                console.log(resp)
+                toast.success('Employee deleted!');
+                this.redirect();
+            });
     }
 
     formIsValid() {
@@ -89,6 +98,8 @@ class ManageEmployeePage extends React.Component {
         const { titles } = this.props;
         const id = this.props.match.params.id;
 
+        this.setState({ saving: true })
+
         employee.titleId = titles.filter(t => {
             return t.name == employee.title
         })[0].id;
@@ -97,19 +108,32 @@ class ManageEmployeePage extends React.Component {
             this.props.updateEmployee(employee)
                 .then((resp) => {
                     if (resp == 'OK') {
+                        toast.success("Employee updated!");
+                        this.setState({ saving: false });
                         this.redirect();
+                    } else {
+                        toast.error("Employee failed!");
+                        this.setState({ saving: false });
                     }
+                })
+                .catch(err => {
+                    this.setState({ saving: false });
+                    console.log(err);
                 });
         } else {
             this.props.createNewEmployee(employee)
                 .then((resp) => {
                     if (resp == 'OK') {
+                        toast.success("Employee created!");
+                        this.setState({ saving: false });
                         this.redirect();
                     } else {
                         // dispatch error message
+                        this.setState({ saving: false });
                     }
                 })
                 .catch(err => {
+                    this.setState({ saving: false });
                     console.log(err);
                 });
         }
@@ -129,8 +153,10 @@ class ManageEmployeePage extends React.Component {
                     employee={this.state.employee}
                     submitForm={this.submitForm}
                     handleChange={this.handleChange}
+                    saving={this.state.saving}
+                    deleteUser={this.deleteUser}
                 />}
-                {this.props.employeeId && <button onClick={this.deleteUser}>DELETE</button>}
+
             </div>
         )
     }

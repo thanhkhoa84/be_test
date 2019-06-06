@@ -21,8 +21,6 @@ const configureStore = (initialState) => {
         )
     );
 
-    console.log(store.getState())
-
     return store;
 }
 

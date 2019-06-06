@@ -9,7 +9,7 @@ class EmployeeForm extends React.Component {
     }
 
     render() {
-        const { options, employee, errors } = this.props;
+        const { options, employee, errors, saving, deleteUser } = this.props;
         return (
             <form onSubmit={this.props.submitForm}>
                 <h4>{!!this.props.edit ? 'Edit' : 'Add New'} Employee</h4>
@@ -57,7 +57,15 @@ class EmployeeForm extends React.Component {
                             error={errors.title}
                         />
                     </div>
-                    <input className="button-primary u-pull-right" type="submit" value="SAVE"></input>
+                    <div>
+                        {this.props.edit && <button onClick={() => deleteUser(employee.id)}>DELETE</button>}
+                        <button
+                            className="button-primary u-pull-right"
+                            type="submit"
+                            disabled={saving}
+                            type="submit"
+                        >{saving ? "SAVING..." : "SAVE"}</button>
+                    </div>
                 </div>
             </form>
         )
