@@ -13,7 +13,7 @@ class EmployeeForm extends React.Component {
         const { submitForm, edit, isValid, options, employee, errors, saving, deleteUser, handleChange, onBlur } = this.props;
         return (
             <form onSubmit={submitForm}>
-                <h4>{!edit ? 'Edit' : 'Add New'} Employee</h4>
+                <h4>{edit ? 'Edit' : 'Add New'} Employee</h4>
                 <div className="row">
                     <div className="u-full-width">
                         <TextInput
@@ -61,12 +61,12 @@ class EmployeeForm extends React.Component {
                             error={errors.title}
                         />
                     </div>
-                    <div>
+                    <div className="u-pull-right form-actions">
                         {edit && <a className="button" onClick={() => deleteUser(employee.id)}>DELETE</a>}
                         <button
-                            className="button-primary u-pull-right"
+                            className="button-primary"
                             type="submit"
-                            disabled={saving || !isValid}
+                            disabled={saving}
                             type="submit"
                         >{saving ? "SAVING..." : "SAVE"}</button>
                     </div>

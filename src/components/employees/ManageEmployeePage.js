@@ -15,7 +15,6 @@ class ManageEmployeePage extends React.Component {
         super(props);
         this.state = {
             isLoading: true,
-            titles: [],
             errors: {},
             employee: null,
             saving: false,
@@ -42,7 +41,7 @@ class ManageEmployeePage extends React.Component {
         const id = this.props.match.params.id;
         if (id) {
             this.props.fetchEmployeebyId(id)
-                .then(resp => { this.setState({ employee: resp, isLoading: false }) });
+                .then(resp => { this.setState({ employee: resp, isLoading: false, isValid: true }) });
         } else {
             this.setState({ employee: this.newEmployee, isLoading: false })
         }

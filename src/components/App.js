@@ -11,7 +11,7 @@ import PageNotFound from './PageNotFound';
 const App = () => (
     <div>
         <Header />
-        <div className="container">
+        <main className="container">
             <Switch>
                 <Route path="/" exact component={EmployeesPage} />
                 <Route path="/titles" exact component={TitlesPage} />
@@ -19,7 +19,7 @@ const App = () => (
                 <Route path="/employee/:id" exact component={ManageEmployeePage} />
                 <Route component={PageNotFound} />
             </Switch>
-        </div>
+        </main>
         <ToastContainer
             position="top-right"
             autoClose={2000}

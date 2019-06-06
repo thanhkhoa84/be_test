@@ -10,26 +10,19 @@ class EmployeesList extends React.Component {
         const { employees, offset, limit } = this.props;
         const eToShow = employees.slice(offset, offset + limit);
         return (
-            <table className="u-full-width">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Title</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div className="row">
+                <ul className="employees-list">
                     {eToShow.map((e, i) => {
                         return (
-                            <EmployeeCard
-                                key={i}
-                                employee={e}
-                            />
+                            <li key={i}>
+                                <EmployeeCard
+                                    employee={e}
+                                />
+                            </li>
                         )
                     })}
-                </tbody>
-            </table>
+                </ul>
+            </div>
         );
     }
 }
