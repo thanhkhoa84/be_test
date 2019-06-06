@@ -28,12 +28,14 @@ class EmployeesPage extends React.Component {
 
     fetchData() {
         const { search } = this.props.location;
-        const pageParams = search.replace('?p=', '');
+        const pageParams = +search.replace('?p=', '');
 
         let offset = 0;
+        let initialPage = 0;
 
         if (pageParams) {
             offset = Math.ceil((pageParams - 1) * this.state.limit);
+            initialPage = pageParams - 1;
         }
 
         this.props.fetchAllEmployees().then(
@@ -41,7 +43,7 @@ class EmployeesPage extends React.Component {
                 const total = employees.length;
                 this.setState({
                     offset: offset,
-                    initialPage: pageParams - 1,
+                    initialPage: initialPage,
                     pageCount: Math.ceil(total / this.state.limit)
                 });
             }

@@ -53,7 +53,7 @@ class ManageEmployeePage extends React.Component {
 
     redirect() {
         this.setState({ employee: this.newEmployee }, () => {
-            this.props.history.goBack();
+            this.props.history.push('/');
         });
     }
 
