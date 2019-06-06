@@ -31,8 +31,6 @@ class ManageEmployeePage extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.submitForm = this.submitForm.bind(this);
         this.deleteUser = this.deleteUser.bind(this);
-
-        console.log(toast)
     }
 
     componentDidMount() {
@@ -60,9 +58,12 @@ class ManageEmployeePage extends React.Component {
     deleteUser() {
         this.props.deleteEmployee(this.props.match.params.id)
             .then((resp) => {
-                console.log(resp)
-                toast.success('Employee deleted!');
-                this.redirect();
+                if (resp == 'OK') {
+                    toast.success('Employee deleted!');
+                    this.redirect();
+                } else {
+                    toast.error(resp);
+                }
             });
     }
 
@@ -77,7 +78,6 @@ class ManageEmployeePage extends React.Component {
         this.setState({ errors: errors });
         return Object.keys(errors).length === 0;
     }
-
 
     handleChange(e) {
         const { name, value } = e.target;
@@ -110,15 +110,13 @@ class ManageEmployeePage extends React.Component {
                     if (resp == 'OK') {
                         toast.success("Employee updated!");
                         this.setState({ saving: false });
-                        this.redirect();
                     } else {
-                        toast.error("Employee failed!");
+                        toast.error(resp);
                         this.setState({ saving: false });
                     }
                 })
                 .catch(err => {
                     this.setState({ saving: false });
-                    console.log(err);
                 });
         } else {
             this.props.createNewEmployee(employee)
@@ -128,7 +126,7 @@ class ManageEmployeePage extends React.Component {
                         this.setState({ saving: false });
                         this.redirect();
                     } else {
-                        // dispatch error message
+                        toast.error(resp);
                         this.setState({ saving: false });
                     }
                 })

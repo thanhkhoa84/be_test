@@ -44,14 +44,17 @@ export const fetchEmployeebyId = (id) => (dispatch) => {
     dispatch(beginApiCall());
     return api.getEmployeebyId(id)
         .then(resp => {
+            const json = resp.clone().json();
+            const text = resp.clone().text();
             if (resp.status == 200) {
-                return resp.json();
+                dispatch(getEmployeeSuccess(resp.json()));
+                return json;
+            } else {
+                dispatch(apiCallError());
+                return text;
             }
         })
-        .then(resp => {
-            dispatch(getEmployeeSuccess(resp));
-            return resp;
-        })
+        .then(resp => { return resp })
         .catch(err => {
             dispatch(apiCallError(err));
             dispatch({ type: types.GET_EMPLOYEE_FAILURE });
@@ -62,18 +65,18 @@ export const createNewEmployee = (employee) => (dispatch) => {
     dispatch(beginApiCall());
     return api.createNewEmployee(employee)
         .then(resp => {
-            const temp = resp.clone()
+            const json = resp.clone().json();
+            const text = resp.clone().text();
             if (resp.status == 200) {
-                dispatch(createNewEmployeeSuccess(temp.json()));
+                dispatch(createNewEmployeeSuccess(json));
             } else {
-                dispatch(apiCallError(err));
+                dispatch(apiCallError());
                 dispatch({ type: types.CREATE_EMPLOYEE_FAILURE });
             }
             return resp.text();
         })
         .then(resp => { return resp })
         .catch(err => {
-            console.log(err)
             dispatch(apiCallError(err));
             dispatch({ type: types.CREATE_EMPLOYEE_FAILURE });
         });
@@ -81,12 +84,18 @@ export const createNewEmployee = (employee) => (dispatch) => {
 
 export const updateEmployee = (employee) => (dispatch) => {
     return api.updateEmployee(employee)
-        .then(employee => {
-            dispatch(updateEmployeeSuccess(employee));
+        .then(resp => {
+            if (resp.status == 200) {
+                dispatch(updateEmployeeSuccess(employee));
+            } else {
+                dispatch(apiCallError());
+                dispatch({ type: types.UPDATE_EMPLOYEE_FAILURE });
+            }
+            return resp.text();
         })
+        .then(resp => { return resp })
         .catch(err => {
             dispatch({ type: types.UPDATE_EMPLOYEE_FAILURE });
-            console.log(err);
         });
 };
 
@@ -97,7 +106,7 @@ export const deleteEmployee = (id) => (dispatch) => {
             if (resp.status == 200) {
                 dispatch(deleteEmployeeSuccess());
             } else {
-                dispatch(apiCallError(err));
+                dispatch(apiCallError());
                 dispatch({ type: types.CREATE_EMPLOYEE_FAILURE });
             }
             return resp.text();

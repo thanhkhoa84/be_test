@@ -58,7 +58,7 @@ class EmployeeForm extends React.Component {
                         />
                     </div>
                     <div>
-                        {this.props.edit && <button onClick={() => deleteUser(employee.id)}>DELETE</button>}
+                        {this.props.edit && <a className="button" onClick={() => deleteUser(employee.id)}>DELETE</a>}
                         <button
                             className="button-primary u-pull-right"
                             type="submit"
