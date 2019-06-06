@@ -13,10 +13,10 @@ class EmployeesPage extends React.Component {
         super(props);
         this.state = {
             isLoading: false,
-            page: 1,
             pageCount: 0,
             limit: 20,
-            offset: 0
+            offset: 0,
+            initialPage: 0
         }
 
         this.handlePageClick = this.handlePageClick.bind(this);
@@ -26,16 +26,23 @@ class EmployeesPage extends React.Component {
         this.fetchData();
     }
 
-    componentDidUpdate(prevProps) {
-        // this.fetchData();
-    }
-
     fetchData() {
+        const { search } = this.props.location;
+        const pageParams = search.replace('?p=', '');
+
+        let offset = 0;
+
+        if (pageParams) {
+            offset = Math.ceil((pageParams - 1) * this.state.limit);
+        }
+
         this.props.fetchAllEmployees().then(
             employees => {
                 const total = employees.length;
                 this.setState({
-                    pageCount: Math.ceil(total / this.state.limit),
+                    offset: offset,
+                    initialPage: pageParams - 1,
+                    pageCount: Math.ceil(total / this.state.limit)
                 });
             }
         );
@@ -45,7 +52,11 @@ class EmployeesPage extends React.Component {
         let selected = data.selected;
         let offset = Math.ceil(selected * this.state.limit);
 
-        this.setState({ offset: offset });
+        this.setState({ offset: offset, page: selected + 1 }, () => {
+            this.props.history.push({
+                search: `?p=${this.state.page}`
+            });
+        });
     }
 
     render() {
@@ -78,6 +89,9 @@ class EmployeesPage extends React.Component {
                     containerClassName={'pagination'}
                     subContainerClassName={'pages pagination'}
                     activeClassName={'active'}
+                    initialPage={this.state.initialPage}
+                    disableInitialCallback={true}
+                    forcePage={this.state.initialPage}
                 />
             </div >
         )

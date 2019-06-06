@@ -4,21 +4,23 @@ import TitleRow from './TitleRow';
 
 const TitlesList = ({ titles }) => {
     return (
-        <table className="u-full-width">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                </tr>
-            </thead>
-            <tbody>
-                {titles.map((t, i) => {
-                    return (
-                        <TitleRow key={i} title={t} />
-                    )
-                })}
-            </tbody>
-        </table>
+        <div className="titles-list">
+            <table className="u-full-width">
+                <thead>
+                    <tr>
+                        <th style={{ width: `10px` }}>ID</th>
+                        <th>Title</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {titles.map((t, i) => {
+                        return (
+                            <TitleRow key={i} title={t} />
+                        )
+                    })}
+                </tbody>
+            </table>
+        </div>
     )
 }
 
