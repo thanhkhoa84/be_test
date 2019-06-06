@@ -4,6 +4,7 @@ const SelectInput = ({
     name,
     label,
     onChange,
+    onBlur,
     defaultOption,
     value,
     options,
@@ -19,6 +20,7 @@ const SelectInput = ({
                 name={name}
                 value={value}
                 onChange={onChange}
+                onBlur={onBlur}
             >
                 <option value="">{defaultOption}</option>
                 {options.map(option => {

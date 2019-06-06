@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
 import { toast } from "react-toastify";
+import validator from 'validator';
 
 import Loader from '../commons/Loader';
 import EmployeeForm from './EmployeeForm';
@@ -17,7 +18,8 @@ class ManageEmployeePage extends React.Component {
             titles: [],
             errors: {},
             employee: null,
-            saving: false
+            saving: false,
+            isValid: false
         }
 
         this.newEmployee = {
@@ -29,6 +31,7 @@ class ManageEmployeePage extends React.Component {
         }
 
         this.handleChange = this.handleChange.bind(this);
+        this.validateInput = this.validateInput.bind(this);
         this.submitForm = this.submitForm.bind(this);
         this.deleteUser = this.deleteUser.bind(this);
     }
@@ -41,7 +44,7 @@ class ManageEmployeePage extends React.Component {
             this.props.fetchEmployeebyId(id)
                 .then(resp => { this.setState({ employee: resp, isLoading: false }) });
         } else {
-            this.setState({ employee: this.newEmployee })
+            this.setState({ employee: this.newEmployee, isLoading: false })
         }
     }
 
@@ -67,33 +70,48 @@ class ManageEmployeePage extends React.Component {
             });
     }
 
-    formIsValid() {
-        const { name, email, title } = this.state.employee;
-        const errors = {};
-
-        if (!name) errors.name = "Name is required";
-        if (!email) errors.email = "Email is required.";
-        if (!title) errors.title = "Job title is required";
-
-        this.setState({ errors: errors });
-        return Object.keys(errors).length === 0;
-    }
-
     handleChange(e) {
         const { name, value } = e.target;
         this.setState({
             employee: Object.assign({}, this.state.employee, {
                 [name]: value
             })
+        }, () => {
+            this.validateInput();
         });
         e.preventDefault();
     }
 
+    validateInput() {
+        const errors = {};
+
+        const { name, email, title } = this.state.employee;
+
+        if (validator.isEmpty(name)) {
+            errors.name = 'Name is required'
+        }
+
+        if (validator.isEmpty(email)) {
+            errors.email = 'Email is required'
+        }
+
+        if (!validator.isEmail(email)) {
+            errors.email = 'Invalid email address'
+        }
+
+        if (validator.isEmpty(title)) {
+            errors.title = 'Title is required'
+        }
+
+        this.setState({ errors, isValid: Object.keys(errors).length === 0 })
+    }
+
     submitForm(e) {
         e.preventDefault();
-        if (!this.formIsValid()) {
+        if (!this.state.isValid) {
             return;
         }
+
         const { employee } = this.state;
         const { titles } = this.props;
         const id = this.props.match.params.id;
@@ -151,7 +169,9 @@ class ManageEmployeePage extends React.Component {
                     employee={this.state.employee}
                     submitForm={this.submitForm}
                     handleChange={this.handleChange}
+                    onBlur={this.validateInput}
                     saving={this.state.saving}
+                    isValid={this.state.isValid}
                     deleteUser={this.deleteUser}
                 />}
 

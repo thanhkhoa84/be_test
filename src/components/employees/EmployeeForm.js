@@ -2,6 +2,7 @@ import React from 'react';
 
 import TextInput from '../commons/TextInput';
 import SelectInput from '../commons/SelectInput';
+import { isValid } from 'ipaddr.js';
 
 class EmployeeForm extends React.Component {
     constructor(props) {
@@ -9,10 +10,10 @@ class EmployeeForm extends React.Component {
     }
 
     render() {
-        const { options, employee, errors, saving, deleteUser } = this.props;
+        const { submitForm, edit, isValid, options, employee, errors, saving, deleteUser, handleChange, onBlur } = this.props;
         return (
-            <form onSubmit={this.props.submitForm}>
-                <h4>{!!this.props.edit ? 'Edit' : 'Add New'} Employee</h4>
+            <form onSubmit={submitForm}>
+                <h4>{!edit ? 'Edit' : 'Add New'} Employee</h4>
                 <div className="row">
                     <div className="u-full-width">
                         <TextInput
@@ -22,7 +23,8 @@ class EmployeeForm extends React.Component {
                             placeholder="Employee Name"
                             value={employee.name}
                             required={false}
-                            onChange={this.props.handleChange}
+                            onChange={handleChange}
+                            onBlur={onBlur}
                             error={errors.name}
                         />
                     </div>
@@ -36,7 +38,8 @@ class EmployeeForm extends React.Component {
                             placeholder="Employee Email"
                             value={employee.email}
                             required={false}
-                            onChange={this.props.handleChange}
+                            onChange={handleChange}
+                            onBlur={onBlur}
                             error={errors.email}
                         />
                     </div>
@@ -46,7 +49,8 @@ class EmployeeForm extends React.Component {
                             label="Job Title"
                             defaultOption="Choose A Title"
                             value={employee.title}
-                            onChange={this.props.handleChange}
+                            onChange={handleChange}
+                            onBlur={onBlur}
                             required={false}
                             options={
                                 options.map(title => ({
@@ -58,11 +62,11 @@ class EmployeeForm extends React.Component {
                         />
                     </div>
                     <div>
-                        {this.props.edit && <a className="button" onClick={() => deleteUser(employee.id)}>DELETE</a>}
+                        {edit && <a className="button" onClick={() => deleteUser(employee.id)}>DELETE</a>}
                         <button
                             className="button-primary u-pull-right"
                             type="submit"
-                            disabled={saving}
+                            disabled={saving || !isValid}
                             type="submit"
                         >{saving ? "SAVING..." : "SAVE"}</button>
                     </div>

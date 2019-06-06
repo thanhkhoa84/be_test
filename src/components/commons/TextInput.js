@@ -5,6 +5,7 @@ const TextInput = ({
     name,
     label,
     onChange,
+    onBlur,
     placeholder,
     value,
     required,
@@ -21,6 +22,7 @@ const TextInput = ({
                 required={required}
                 value={value}
                 onChange={onChange}
+                onBlur={onBlur}
             />
             {error && <span className="error">{error}</span>}
         </div>

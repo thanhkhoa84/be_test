@@ -65,6 +65,13 @@ a:focus {
   color: $black;
 }
 
+.error {
+  color: red;
+  margin-top: -1em;
+  display: block;
+  font-size: 0.75em;
+}
+
 .button.button-primary,
 button.button-primary,
 input[type="submit"].button-primary,
