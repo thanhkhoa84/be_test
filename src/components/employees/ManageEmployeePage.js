@@ -160,11 +160,9 @@ class ManageEmployeePage extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
-    return {
-        titles: state.titles,
-        isLoading: state.apiCallsInProgress > 0
-    }
-};
+const mapStateToProps = (state) => ({
+    titles: state.titles,
+    isLoading: state.apiCallsInProgress > 0
+});
 
 export default withRouter(connect(mapStateToProps, { fetchTitles, fetchEmployeebyId, updateEmployee, createNewEmployee, deleteEmployee })(ManageEmployeePage));
