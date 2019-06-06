@@ -108,6 +108,7 @@ class ManageEmployeePage extends React.Component {
     submitForm(e) {
         e.preventDefault();
         if (!this.state.isValid) {
+            this.validateInput();
             return;
         }
 

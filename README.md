@@ -10,4 +10,11 @@
 	* Create employee form: textbox to provide name, title_id (refer to rank titles page) and email. On submission call PUT `/employee` API and display status message
 	* Search employee button: Search employee by id using GET `/employee/id`, display result with 2 action buttons: UPDATE and DELETE. Update button provide similar form as create employee, calling POST `employee/id`, and refresh the result page upon successful update. Delete button call DELETE `/employee/id` and return to list all employees page upon successful deletion
 [x] Adding interaction
-[ ] Improve UX UI
+[X] Improve UX UI
+
+
+**INSTRUCTION**
+`yarn install` to install all dependencies packages
+`yarn run dev` to start development server at http://localhost:3000	
+`yarn run build` to build. Built files are located in "public" folder
+`yarn run start` this script is to run the app on production server or test built files
