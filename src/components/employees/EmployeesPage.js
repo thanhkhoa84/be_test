@@ -1,9 +1,10 @@
 import React from 'React';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-import EmployeesList from './EmployeesList';
 import ReactPaginate from 'react-paginate';
+
+import Loader from '../commons/Loader';
+import EmployeesList from './EmployeesList';
 
 import { fetchAllEmployees } from '../../actions/employeeActions';
 
@@ -44,13 +45,16 @@ class EmployeesPage extends React.Component {
     }
 
     render() {
+        const { isLoading } = this.props;
+        if (isLoading) {
+            return (<Loader />)
+        }
         return (
             <div className="row">
-                <div>
+                <div className="clearfix">
                     <h4 className="u-pull-left">Employees List</h4>
                     <Link to="/employee" className="button button-primary u-pull-right">Add New Employee</Link>
                 </div>
-
                 <EmployeesList
                     employees={this.props.employees}
                     offset={this.state.offset}
@@ -78,7 +82,8 @@ class EmployeesPage extends React.Component {
 
 const mapStateToProps = (state) => ({
     employees: state.employees,
-    pageCount: state.pageCount
+    pageCount: state.pageCount,
+    isLoading: state.apiCallsInProgress > 0
 })
 
 export default connect(mapStateToProps, { fetchAllEmployees })(EmployeesPage);

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
+import Loader from '../commons/Loader';
 import EmployeeForm from './EmployeeForm';
 
 import { fetchTitles } from '../../actions/titlesActions';
@@ -115,9 +116,12 @@ class ManageEmployeePage extends React.Component {
     }
 
     render() {
+        const { isLoading } = this.props;
+        if (isLoading) {
+            return (<Loader />)
+        }
         return (
             <div className="row">
-                {!this.state.employee && <h3>Loading...</h3>}
                 {this.state.employee && <EmployeeForm
                     edit={!!this.props.match.params.id}
                     options={this.props.titles}
@@ -135,6 +139,7 @@ class ManageEmployeePage extends React.Component {
 const mapStateToProps = (state, ownProps) => {
     return {
         titles: state.titles,
+        isLoading: state.apiCallsInProgress > 0
     }
 };
 

@@ -1,5 +1,6 @@
 import * as types from '../actions/actionTypes';
 
+
 export const employeeReducer = (state = {}, action) => {
     switch (action.type) {
         case types.GET_EMPLOYEE_SUCCESS:

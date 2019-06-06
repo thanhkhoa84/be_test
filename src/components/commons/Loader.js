@@ -2,6 +2,8 @@ import React from 'react';
 
 const Loader = () => {
     return (
-        <div class="lds-dual-ring"></div>
+        <div className="text-center"><div className="lds-dual-ring"></div></div>
     )
 }
+
+export default Loader;
