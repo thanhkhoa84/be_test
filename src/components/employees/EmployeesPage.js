@@ -26,6 +26,10 @@ class EmployeesPage extends React.Component {
         this.fetchData();
     }
 
+    componentDidUpdate(prevProps) {
+        // this.fetchData();
+    }
+
     fetchData() {
         this.props.fetchAllEmployees().then(
             employees => {
